@@ -3,7 +3,7 @@ namespace LibrarySystem
     public partial class Form1 : Form
     {
         private List<Book> books = new List<Book>();
-        
+
         public Form1()
         {
             books = GenerateSampleList();
@@ -20,7 +20,7 @@ namespace LibrarySystem
             dgvBookView.ReadOnly = false;
 
             //Columns
-            dgvBookView.Columns.Add(new DataGridViewTextBoxColumn{DataPropertyName = "Id",HeaderText = "ID",Width = 50});
+            dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID", Width = 50 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title", Width = 200 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Author", HeaderText = "Author", Width = 150 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Genre", HeaderText = "Genre", Width = 100 });
@@ -60,7 +60,7 @@ namespace LibrarySystem
 
         private void LoadBooks()
         {
-            
+
             dgvBookView.DataSource = null; //Incase grid view is already initialized
             dgvBookView.DataSource = books;
         }
@@ -93,7 +93,20 @@ namespace LibrarySystem
         private void ViewEditBook(int rowIndex)
         {
             //undone
-        }
+            Book selectedBook = books[rowIndex];
+            if (selectedBook != null)
+            {
+                using (FormViewEdit form = new FormViewEdit(selectedBook))
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        // Update the book in the list
+                        books[rowIndex] = form.book;
+                        LoadBooks();
+                    }
+                }
+            }
 
+        }
     }
 }
