@@ -1,0 +1,16 @@
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.Form1.resources
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.csproj.GenerateResource.cache
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.AssemblyInfoInputs.cache
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.AssemblyInfo.cs
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.csproj.CoreCompileInputs.cache
+C:\Users\Davin\source\repos\LibrarySystem\bin\Debug\net8.0-windows\LibrarySystem.exe
+C:\Users\Davin\source\repos\LibrarySystem\bin\Debug\net8.0-windows\LibrarySystem.deps.json
+C:\Users\Davin\source\repos\LibrarySystem\bin\Debug\net8.0-windows\LibrarySystem.runtimeconfig.json
+C:\Users\Davin\source\repos\LibrarySystem\bin\Debug\net8.0-windows\LibrarySystem.dll
+C:\Users\Davin\source\repos\LibrarySystem\bin\Debug\net8.0-windows\LibrarySystem.pdb
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.dll
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\refint\LibrarySystem.dll
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.pdb
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\LibrarySystem.genruntimeconfig.cache
+C:\Users\Davin\source\repos\LibrarySystem\obj\Debug\net8.0-windows\ref\LibrarySystem.dll
