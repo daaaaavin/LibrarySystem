@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace LibrarySystem
 {
@@ -34,5 +35,7 @@ namespace LibrarySystem
             DueDate = dueDate;
             TimesRead = timesRead;
         }
+
+        public Book() { }
     }
 }

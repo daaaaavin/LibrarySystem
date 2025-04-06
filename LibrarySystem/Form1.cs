@@ -2,7 +2,7 @@ namespace LibrarySystem
 {
     public partial class Form1 : Form
     {
-        private List<Book> books = new List<Book>();
+        public List<Book> books = new List<Book>();
         private List<Book> favouritedBooks = new List<Book>();
 
         public Form1()
@@ -13,6 +13,51 @@ namespace LibrarySystem
             InitializeFavouritesGrid();
             LoadBooks();
             PopulateFavourites();
+        }
+
+
+
+        private List<Book> LoadFromFile()
+        {
+            List<Book> loadedBooks = new List<Book>();
+
+            string[] lines = File.ReadAllLines("BookList.dat");
+            foreach (var line in lines.Skip(1))
+            {
+                var variables = line.Split(',');
+
+                int id = int.Parse(variables[0]);
+                string title = variables[1];
+                string author = variables[2];
+                string genre = variables[3];
+                DateTime dateAdded = DateTime.Parse(variables[4]);
+                DateTime? publicationDate = string.IsNullOrEmpty(variables[5]) ? (DateTime?)null : DateTime.Parse(variables[5]);
+                bool isCheckedOut = bool.Parse(variables[6]);
+                bool isFavourite = bool.Parse(variables[7]);
+                DateTime? dueDate = string.IsNullOrEmpty(variables[8]) ? (DateTime?)null : (DateTime.TryParse(variables[8], out DateTime tempDueDate) ? tempDueDate : (DateTime?)null);
+                int timesRead = int.Parse(variables[9]);
+
+                loadedBooks.Add(new Book(id, title, author, genre, dateAdded, publicationDate, isFavourite, isCheckedOut, dueDate, timesRead));
+            }
+
+            return loadedBooks;
+        }
+
+        private void ExportToFile(List<Book> book)
+        {
+            var lines = new List<string>
+            {
+                "Id,Title,Author,Genre,DateAdded,PublicationDate,IsCheckedOut,IsFavourite,DueDate,TimesRead"
+            };
+
+            foreach (var b in books)
+            {
+                var line = $"{b.Id},{b.Title},{b.Author},{b.Genre},{b.DateAdded},{b.PublicationDate},{b.IsCheckedOut},{b.IsFavourite},{b.DueDate},{b.TimesRead}";
+                lines.Add(line);
+            }
+
+            File.WriteAllLines("BookList.dat", lines);
+
         }
 
         private void InitializeFavouritesGrid()
@@ -45,10 +90,11 @@ namespace LibrarySystem
             dgvBookView.ReadOnly = false;
 
             //Columns
+            dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID", Name = "Id", Width = 50 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title", Width = 200 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Author", HeaderText = "Author", Width = 150 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Genre", HeaderText = "Genre", Width = 100 });
-            dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID", Width = 50 });
+
 
             //Delete Button
             DataGridViewButtonColumn btnDeleteBook = new DataGridViewButtonColumn();
@@ -69,6 +115,8 @@ namespace LibrarySystem
             dgvBookView.CellClick += DgvBookView_CellClick;
         }
 
+
+        //Initial Sample Data
         private List<Book> GenerateSampleList()
         {
             return new List<Book>
@@ -83,13 +131,15 @@ namespace LibrarySystem
             };
         }
 
-        private void LoadBooks()
+        //Refresh Book List
+        public void LoadBooks()
         {
 
             dgvBookView.DataSource = null; //Incase grid view is already initialized
             dgvBookView.DataSource = books;
         }
 
+        //Refresh Favourites List
         private void PopulateFavourites()
         {
             favouritedBooks.Clear();
@@ -120,20 +170,30 @@ namespace LibrarySystem
             }
         }
 
+
+
         private void DeleteBook(int rowIndex)
         {
             if (MessageBox.Show("Are you sure you want to delete this book?", "Delete Book", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                books.RemoveAt(rowIndex);
-                LoadBooks();
-                PopulateFavourites();
+                var cell = dgvBookView.Rows[rowIndex].Cells["Id"];
+                int bookId = (int)cell.Value;
+                Book bookToRemove = books.FirstOrDefault(b => b.Id == bookId);
+                if (bookToRemove != null)
+                {
+                    books.Remove(bookToRemove);
+                    LoadBooks();
+                    PopulateFavourites();
+                }
+
             }
         }
 
         private void ViewEditBook(int rowIndex)
         {
-            //undone
-            Book selectedBook = books[rowIndex];
+            var cell = dgvBookView.Rows[rowIndex].Cells["Id"];
+            int bookId = (int)cell.Value;
+            Book selectedBook = books.FirstOrDefault(b => b.Id == bookId);
             if (selectedBook != null)
             {
                 using (FormViewEdit form = new FormViewEdit(selectedBook))
@@ -141,22 +201,27 @@ namespace LibrarySystem
                     if (form.ShowDialog() == DialogResult.OK)
                     {
                         // Update the book in the list
-                        books[rowIndex] = form.book;
-                        LoadBooks();
-                        PopulateFavourites();
+                        int index = books.FindIndex(b => b.Id == bookId);
+                        if (index != -1)
+                        {
+                            books[index] = form.book;
+                            LoadBooks();
+                            PopulateFavourites();
+                        }
                     }
                 }
             }
-
         }
 
 
         //Unfavourite a book
-        private void DgvFavourites_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void DgvFavourites_CellClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0)
+            if (e.RowIndex >= 0 && dgvFavourites.Columns[e.ColumnIndex] is DataGridViewButtonColumn)
             {
-                Book selectedBook = dgvFavourites.Rows[e.RowIndex].DataBoundItem as Book;
+                var cell = dgvFavourites.Rows[e.RowIndex].Cells["Id"];
+                int bookId = (int)cell.Value;
+                Book? selectedBook = favouritedBooks.FirstOrDefault(b => b.Id == bookId);
                 if (selectedBook != null)
                 {
                     if (MessageBox.Show("Are you sure you want to remove this book from favourites?", "Remove From Favourites", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -167,6 +232,115 @@ namespace LibrarySystem
                     }
                 }
             }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            books = LoadFromFile();
+            LoadBooks();
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            ExportToFile(books);
+            MessageBox.Show("Data Exported.");
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string searchBar = txtSearch.Text.Trim().ToLower();
+
+            if (string.IsNullOrEmpty(searchBar))
+            {
+                MessageBox.Show("Search Bar Is Empty, Try Again.");
+                return;
+            }
+
+            List<Book> results;
+
+            if (btnSearch.Text == "Search")
+            {
+                if (rdoSearchByName.Checked)
+                {
+                    results = books.Where(b => b.Title != null && b.Title.ToLower().Contains(searchBar)).ToList();
+                }
+                else if (rdoSearchByAuthor.Checked)
+                {
+                    results = books.Where(b => b.Author != null && b.Author.ToLower().Contains(searchBar)).ToList();
+                }
+                else if (rdoSearchByGenre.Checked)
+                {
+                    results = books.Where(b => b.Genre != null && b.Genre.ToLower().Contains(searchBar)).ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a search filter (Title, Author, or Genre).");
+                    return;
+                }
+                dgvBookView.DataSource = null;
+                dgvBookView.DataSource = results;
+            }
+            else
+            {
+                btnSearch.Text = "Search";
+                txtSearch.Text = "";
+
+                //Reset the grid view to show all books
+                dgvBookView.DataSource = null;
+                dgvBookView.DataSource = books;
+            }
+        }
+
+        private void SortBooks()
+        {
+            string? sortBy = cmbSort.SelectedItem?.ToString();
+
+            if (sortBy == null)
+            {
+                MessageBox.Show("Please select a sort option.");
+                return;
+            }
+
+            switch (sortBy)
+            {
+                case "Title":
+                    books = books.OrderBy(b => b.Title).ToList();
+                    break;
+                case "Author":
+                    books = books.OrderBy(b => b.Author).ToList();
+                    break;
+                case "Genre":
+                    books = books.OrderBy(b => b.Genre).ToList();
+                    break;
+                case "Published":
+                    books = books.OrderBy(b => b.PublicationDate).ToList();
+                    break;
+                case "Date Added":
+                    books = books.OrderBy(b => b.DateAdded).ToList();
+                    break;
+                default:
+                    books = books.OrderBy(b => b.Id).ToList();
+                    break;
+            }
+
+            LoadBooks();
+        }
+
+        private void cmbSort_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SortBooks();
+        }
+
+        private void btnAddBook_Click(object sender, EventArgs e)
+        {
+            AddBook addBookForm = new AddBook(this);
+            addBookForm.Show();
+            
+        }
+
+        public int GetNextId()
+        {
+            return books.Count > 0 ? books.Max(b => b.Id) + 1 : 1;
         }
     }
 }
