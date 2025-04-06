@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            lblTitle = new Label();
             lblAuthor = new Label();
             lblPublished = new Label();
             lblGenre = new Label();
@@ -50,15 +50,15 @@
             ((System.ComponentModel.ISupportInitialize)nudTimesRead).BeginInit();
             SuspendLayout();
             // 
-            // label1
+            // lblTitle
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("UD Digi Kyokasho NP-B", 12F, FontStyle.Bold, GraphicsUnit.Point, 128);
-            label1.Location = new Point(18, 31);
-            label1.Name = "label1";
-            label1.Size = new Size(66, 18);
-            label1.TabIndex = 0;
-            label1.Text = "Details";
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("UD Digi Kyokasho NP-B", 12F, FontStyle.Bold, GraphicsUnit.Point, 128);
+            lblTitle.Location = new Point(18, 31);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(66, 18);
+            lblTitle.TabIndex = 0;
+            lblTitle.Text = "Details";
             // 
             // lblAuthor
             // 
@@ -250,7 +250,7 @@
             Controls.Add(lblGenre);
             Controls.Add(lblPublished);
             Controls.Add(lblAuthor);
-            Controls.Add(label1);
+            Controls.Add(lblTitle);
             Name = "FormViewEdit";
             Text = "FormViewEdit";
             ((System.ComponentModel.ISupportInitialize)nudTimesRead).EndInit();
@@ -260,7 +260,7 @@
 
         #endregion
 
-        private Label label1;
+        private Label lblTitle;
         private Label lblAuthor;
         private Label lblPublished;
         private Label lblGenre;

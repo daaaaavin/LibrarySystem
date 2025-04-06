@@ -3,15 +3,40 @@ namespace LibrarySystem
     public partial class Form1 : Form
     {
         private List<Book> books = new List<Book>();
+        private List<Book> favouritedBooks = new List<Book>();
 
         public Form1()
         {
             books = GenerateSampleList();
             InitializeComponent();
             InitializeGridView();
+            InitializeFavouritesGrid();
             LoadBooks();
+            PopulateFavourites();
         }
 
+        private void InitializeFavouritesGrid()
+        {
+            dgvFavourites.AutoGenerateColumns = false;
+            dgvFavourites.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvFavourites.MultiSelect = false;
+            dgvFavourites.ReadOnly = true;
+            //Columns
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID", Width = 50 });
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title", Width = 200 });
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Author", HeaderText = "Author", Width = 150 });
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Genre", HeaderText = "Genre", Width = 100 });
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TimesRead", HeaderText = "Times Read", Width = 50 });
+
+            DataGridViewButtonColumn btnUnfavourite = new DataGridViewButtonColumn();
+            btnUnfavourite.Name = "btnUnfavourite";
+            btnUnfavourite.HeaderText = "";
+            btnUnfavourite.Text = "Remove From Favourites";
+            btnUnfavourite.UseColumnTextForButtonValue = true;
+            dgvFavourites.Columns.Add(btnUnfavourite);
+
+            dgvFavourites.CellClick += DgvFavourites_CellClick;
+        }
         private void InitializeGridView()
         {
             dgvBookView.AutoGenerateColumns = false;
@@ -20,10 +45,10 @@ namespace LibrarySystem
             dgvBookView.ReadOnly = false;
 
             //Columns
-            dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID", Width = 50 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title", Width = 200 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Author", HeaderText = "Author", Width = 150 });
             dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Genre", HeaderText = "Genre", Width = 100 });
+            dgvBookView.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID", Width = 50 });
 
             //Delete Button
             DataGridViewButtonColumn btnDeleteBook = new DataGridViewButtonColumn();
@@ -65,6 +90,20 @@ namespace LibrarySystem
             dgvBookView.DataSource = books;
         }
 
+        private void PopulateFavourites()
+        {
+            favouritedBooks.Clear();
+            foreach (var book in books)
+            {
+                if (book.IsFavourite)
+                {
+                    favouritedBooks.Add(book);
+                }
+            }
+            dgvFavourites.DataSource = null; //Incase grid view is already initialized
+            dgvFavourites.DataSource = favouritedBooks;
+        }
+
 
         private void DgvBookView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -87,6 +126,7 @@ namespace LibrarySystem
             {
                 books.RemoveAt(rowIndex);
                 LoadBooks();
+                PopulateFavourites();
             }
         }
 
@@ -103,10 +143,30 @@ namespace LibrarySystem
                         // Update the book in the list
                         books[rowIndex] = form.book;
                         LoadBooks();
+                        PopulateFavourites();
                     }
                 }
             }
 
+        }
+
+
+        //Unfavourite a book
+        private void DgvFavourites_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                Book selectedBook = dgvFavourites.Rows[e.RowIndex].DataBoundItem as Book;
+                if (selectedBook != null)
+                {
+                    if (MessageBox.Show("Are you sure you want to remove this book from favourites?", "Remove From Favourites", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        selectedBook.IsFavourite = false;
+                        LoadBooks();
+                        PopulateFavourites();
+                    }
+                }
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace LibrarySystem
 
         private void DisplayDetails()
         {
+            lblTitle.Text = book.Title;
             txtAuthor.Text = book.Author;
             txtPublished.Text = book.PublicationDate?.ToString("d") ?? "N/A";
             txtGenre.Text = book.Genre;

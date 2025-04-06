@@ -30,12 +30,15 @@
         {
             tabControl1 = new TabControl();
             tabBooks = new TabPage();
-            tabFavourites = new TabPage();
             dgvBookView = new DataGridView();
+            tabFavourites = new TabPage();
             lblTitle = new Label();
+            dgvFavourites = new DataGridView();
             tabControl1.SuspendLayout();
             tabBooks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvBookView).BeginInit();
+            tabFavourites.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvFavourites).BeginInit();
             SuspendLayout();
             // 
             // tabControl1
@@ -59,23 +62,24 @@
             tabBooks.Text = "Books";
             tabBooks.UseVisualStyleBackColor = true;
             // 
-            // tabFavourites
-            // 
-            tabFavourites.Location = new Point(4, 24);
-            tabFavourites.Name = "tabFavourites";
-            tabFavourites.Padding = new Padding(3);
-            tabFavourites.Size = new Size(696, 477);
-            tabFavourites.TabIndex = 1;
-            tabFavourites.Text = "Favourites";
-            tabFavourites.UseVisualStyleBackColor = true;
-            // 
             // dgvBookView
             // 
             dgvBookView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvBookView.Location = new Point(24, 62);
+            dgvBookView.Location = new Point(-4, 85);
             dgvBookView.Name = "dgvBookView";
-            dgvBookView.Size = new Size(603, 392);
+            dgvBookView.Size = new Size(765, 392);
             dgvBookView.TabIndex = 0;
+            // 
+            // tabFavourites
+            // 
+            tabFavourites.Controls.Add(dgvFavourites);
+            tabFavourites.Location = new Point(4, 24);
+            tabFavourites.Name = "tabFavourites";
+            tabFavourites.Padding = new Padding(3);
+            tabFavourites.Size = new Size(764, 477);
+            tabFavourites.TabIndex = 1;
+            tabFavourites.Text = "Favourites";
+            tabFavourites.UseVisualStyleBackColor = true;
             // 
             // lblTitle
             // 
@@ -86,6 +90,14 @@
             lblTitle.Size = new Size(247, 41);
             lblTitle.TabIndex = 1;
             lblTitle.Text = "Your Library";
+            // 
+            // dgvFavourites
+            // 
+            dgvFavourites.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvFavourites.Location = new Point(0, 91);
+            dgvFavourites.Name = "dgvFavourites";
+            dgvFavourites.Size = new Size(758, 386);
+            dgvFavourites.TabIndex = 0;
             // 
             // Form1
             // 
@@ -99,6 +111,8 @@
             tabControl1.ResumeLayout(false);
             tabBooks.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvBookView).EndInit();
+            tabFavourites.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvFavourites).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -110,5 +124,6 @@
         private DataGridView dgvBookView;
         private TabPage tabFavourites;
         private Label lblTitle;
+        private DataGridView dgvFavourites;
     }
 }
