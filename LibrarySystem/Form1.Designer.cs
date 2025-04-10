@@ -30,6 +30,8 @@
         {
             tabControl1 = new TabControl();
             tabBooks = new TabPage();
+            btnYourBooks = new Button();
+            btnAddBook = new Button();
             cmbSort = new ComboBox();
             lblSearchBy = new Label();
             rdoSearchByGenre = new RadioButton();
@@ -42,9 +44,7 @@
             dgvBookView = new DataGridView();
             tabFavourites = new TabPage();
             dgvFavourites = new DataGridView();
-            tabYourBooks = new TabPage();
             lblTitle = new Label();
-            btnAddBook = new Button();
             tabControl1.SuspendLayout();
             tabBooks.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvBookView).BeginInit();
@@ -56,7 +56,6 @@
             // 
             tabControl1.Controls.Add(tabBooks);
             tabControl1.Controls.Add(tabFavourites);
-            tabControl1.Controls.Add(tabYourBooks);
             tabControl1.Location = new Point(21, 82);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
@@ -65,6 +64,7 @@
             // 
             // tabBooks
             // 
+            tabBooks.Controls.Add(btnYourBooks);
             tabBooks.Controls.Add(btnAddBook);
             tabBooks.Controls.Add(cmbSort);
             tabBooks.Controls.Add(lblSearchBy);
@@ -83,6 +83,26 @@
             tabBooks.TabIndex = 0;
             tabBooks.Text = "Books";
             tabBooks.UseVisualStyleBackColor = true;
+            // 
+            // btnYourBooks
+            // 
+            btnYourBooks.Location = new Point(484, 6);
+            btnYourBooks.Name = "btnYourBooks";
+            btnYourBooks.Size = new Size(75, 23);
+            btnYourBooks.TabIndex = 11;
+            btnYourBooks.Text = "Your Books";
+            btnYourBooks.UseVisualStyleBackColor = true;
+            btnYourBooks.Click += btnYourBooks_Click;
+            // 
+            // btnAddBook
+            // 
+            btnAddBook.Location = new Point(565, 6);
+            btnAddBook.Name = "btnAddBook";
+            btnAddBook.Size = new Size(75, 23);
+            btnAddBook.TabIndex = 10;
+            btnAddBook.Text = "Add Book";
+            btnAddBook.UseVisualStyleBackColor = true;
+            btnAddBook.Click += btnAddBook_Click;
             // 
             // cmbSort
             // 
@@ -196,20 +216,10 @@
             // dgvFavourites
             // 
             dgvFavourites.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvFavourites.Location = new Point(0, 91);
+            dgvFavourites.Location = new Point(3, 85);
             dgvFavourites.Name = "dgvFavourites";
             dgvFavourites.Size = new Size(758, 386);
             dgvFavourites.TabIndex = 0;
-            // 
-            // tabYourBooks
-            // 
-            tabYourBooks.Location = new Point(4, 24);
-            tabYourBooks.Name = "tabYourBooks";
-            tabYourBooks.Padding = new Padding(3);
-            tabYourBooks.Size = new Size(764, 477);
-            tabYourBooks.TabIndex = 2;
-            tabYourBooks.Text = "Your Books";
-            tabYourBooks.UseVisualStyleBackColor = true;
             // 
             // lblTitle
             // 
@@ -220,16 +230,6 @@
             lblTitle.Size = new Size(247, 41);
             lblTitle.TabIndex = 1;
             lblTitle.Text = "Your Library";
-            // 
-            // btnAddBook
-            // 
-            btnAddBook.Location = new Point(565, 6);
-            btnAddBook.Name = "btnAddBook";
-            btnAddBook.Size = new Size(75, 23);
-            btnAddBook.TabIndex = 10;
-            btnAddBook.Text = "Add Book";
-            btnAddBook.UseVisualStyleBackColor = true;
-            btnAddBook.Click += btnAddBook_Click;
             // 
             // Form1
             // 
@@ -266,8 +266,8 @@
         private RadioButton rdoSearchByAuthor;
         private RadioButton rdoSearchByName;
         private Button btnSearch;
-        private TabPage tabYourBooks;
         private ComboBox cmbSort;
         private Button btnAddBook;
+        private Button btnYourBooks;
     }
 }

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace LibrarySystem
 {
+    //Davin's Code:
     public class Book
     {
         public int Id { get; set; }
@@ -17,12 +19,14 @@ namespace LibrarySystem
         public DateTime? PublicationDate { get; set; }
         public bool IsFavourite { get; set; }
 
-        //Goody Support (I don't user these parameters in my part of the code)
+        //Goody's variables:
         public bool IsCheckedOut { get; set; }
         public DateTime? DueDate { get; set; }
         public int TimesRead { get; set; }
 
-        public Book(int id, string title, string author, string genre, DateTime dateAdded, DateTime? publicationDate, bool isFavourite, bool isCheckedOut, DateTime? dueDate, int timesRead)
+        public int RentalCount { get; set; } // New property to track rental count
+
+        public Book(int id, string title, string author, string genre, DateTime dateAdded, DateTime? publicationDate, bool isFavourite, bool isCheckedOut, DateTime? dueDate, int timesRead, int rentalCount)
         {
             Id = id;
             Title = title;
@@ -34,8 +38,31 @@ namespace LibrarySystem
             IsCheckedOut = isCheckedOut;
             DueDate = dueDate;
             TimesRead = timesRead;
+            RentalCount = rentalCount; // Initialize the new property
         }
 
         public Book() { }
+
+        //Goody's Code:
+        private string v1;
+        private string v2;
+        private string v3;
+        public Book(string v1, string v2, string v3)
+        {
+            this.v1 = v1;
+            this.v2 = v2;
+            this.v3 = v3;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not Book other) return false;
+            return Title == other.Title && Author == other.Author && DueDate == other.DueDate;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Title, Author, DueDate);
+        }
     }
 }

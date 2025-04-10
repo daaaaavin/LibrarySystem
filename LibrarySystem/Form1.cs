@@ -1,10 +1,13 @@
+using static System.Reflection.Metadata.BlobBuilder;
+using System.Windows.Forms;
+
 namespace LibrarySystem
 {
     public partial class Form1 : Form
     {
         public List<Book> books = new List<Book>();
         private List<Book> favouritedBooks = new List<Book>();
-
+        public List<Book> rentedBooks = new List<Book>();
         public Form1()
         {
             books = GenerateSampleList();
@@ -13,6 +16,7 @@ namespace LibrarySystem
             InitializeFavouritesGrid();
             LoadBooks();
             PopulateFavourites();
+            PopulateRentedBooks();
         }
 
 
@@ -37,7 +41,7 @@ namespace LibrarySystem
                 DateTime? dueDate = string.IsNullOrEmpty(variables[8]) ? (DateTime?)null : (DateTime.TryParse(variables[8], out DateTime tempDueDate) ? tempDueDate : (DateTime?)null);
                 int timesRead = int.Parse(variables[9]);
 
-                loadedBooks.Add(new Book(id, title, author, genre, dateAdded, publicationDate, isFavourite, isCheckedOut, dueDate, timesRead));
+                loadedBooks.Add(new Book(id, title, author, genre, dateAdded, publicationDate, isFavourite, isCheckedOut, dueDate, timesRead, 0));
             }
 
             return loadedBooks;
@@ -60,28 +64,7 @@ namespace LibrarySystem
 
         }
 
-        private void InitializeFavouritesGrid()
-        {
-            dgvFavourites.AutoGenerateColumns = false;
-            dgvFavourites.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvFavourites.MultiSelect = false;
-            dgvFavourites.ReadOnly = true;
-            //Columns
-            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID", Width = 50 });
-            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title", Width = 200 });
-            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Author", HeaderText = "Author", Width = 150 });
-            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Genre", HeaderText = "Genre", Width = 100 });
-            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TimesRead", HeaderText = "Times Read", Width = 50 });
 
-            DataGridViewButtonColumn btnUnfavourite = new DataGridViewButtonColumn();
-            btnUnfavourite.Name = "btnUnfavourite";
-            btnUnfavourite.HeaderText = "";
-            btnUnfavourite.Text = "Remove From Favourites";
-            btnUnfavourite.UseColumnTextForButtonValue = true;
-            dgvFavourites.Columns.Add(btnUnfavourite);
-
-            dgvFavourites.CellClick += DgvFavourites_CellClick;
-        }
         private void InitializeGridView()
         {
             dgvBookView.AutoGenerateColumns = false;
@@ -115,19 +98,43 @@ namespace LibrarySystem
             dgvBookView.CellClick += DgvBookView_CellClick;
         }
 
+        private void InitializeFavouritesGrid()
+        {
+            dgvFavourites.AutoGenerateColumns = false;
+            dgvFavourites.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvFavourites.MultiSelect = false;
+            dgvFavourites.ReadOnly = true;
+            //Columns
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID", Width = 50 });
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title", Width = 200 });
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Author", HeaderText = "Author", Width = 150 });
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Genre", HeaderText = "Genre", Width = 100 });
+            dgvFavourites.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "TimesRead", HeaderText = "Times Read", Width = 50 });
+
+            DataGridViewButtonColumn btnUnfavourite = new DataGridViewButtonColumn();
+            btnUnfavourite.Name = "btnUnfavourite";
+            btnUnfavourite.HeaderText = "";
+            btnUnfavourite.Text = "Remove From Favourites";
+            btnUnfavourite.UseColumnTextForButtonValue = true;
+            dgvFavourites.Columns.Add(btnUnfavourite);
+
+            dgvFavourites.CellClick += DgvFavourites_CellClick;
+        }
+
+
 
         //Initial Sample Data
         private List<Book> GenerateSampleList()
         {
             return new List<Book>
             {
-                new Book(1, "Ready Player One", "Ernest Cline", "Science Fiction", DateTime.Now.AddDays(-10), new DateTime(2011, 8, 16), true, false, null, 3),
-                new Book(2, "The Outsiders", "S. E. Hinton", "Young Adult", DateTime.Now.AddDays(-20), new DateTime(1967, 4, 24), false, false, null, 2),
-                new Book(3, "The Maze Runner", "James Dashner", "Science Fiction", DateTime.Now.AddDays(-15), new DateTime(2009, 10, 6), true, false, null, 4),
-                new Book(4, "Dune", "Frank Herbert", "Science Fiction", DateTime.Now.AddDays(-5), new DateTime(1965, 8, 1), true, false, null, 5),
-                new Book(5, "Brave New World", "Aldous Huxley", "Dystopian", DateTime.Now.AddDays(-25), new DateTime(1932, 1, 1), false, false, null, 1),
-                new Book(6, "A Brief History of Time", "Stephen Hawking", "Non-Fiction", DateTime.Now.AddDays(-30), new DateTime(1988, 4, 1), true, false, null, 3),
-                new Book(7, "The Sailor Who Fell From Grace With The Sea", "Yukio Mishima", "Fiction", DateTime.Now.AddDays(-12), new DateTime(1963, 1, 1), false, false, null, 2)
+                new Book(1, "Ready Player One", "Ernest Cline", "Science Fiction", DateTime.Now.AddDays(-10), new DateTime(2011, 8, 16), true, false, null, 3, 0),
+                new Book(2, "The Outsiders", "S. E. Hinton", "Young Adult", DateTime.Now.AddDays(-20), new DateTime(1967, 4, 24), false, false, null, 2, 0),
+                new Book(3, "The Maze Runner", "James Dashner", "Science Fiction", DateTime.Now.AddDays(-15), new DateTime(2009, 10, 6), true, false, null, 4 ,0),
+                new Book(4, "Dune", "Frank Herbert", "Science Fiction", DateTime.Now.AddDays(-5), new DateTime(1965, 8, 1), true, false, null, 5 , 0),
+                new Book(5, "Brave New World", "Aldous Huxley", "Dystopian", DateTime.Now.AddDays(-25), new DateTime(1932, 1, 1), false, false, null, 1, 0),
+                new Book(6, "A Brief History of Time", "Stephen Hawking", "Non-Fiction", DateTime.Now.AddDays(-30), new DateTime(1988, 4, 1), true, false, null, 3, 0),
+                new Book(7, "The Sailor Who Fell From Grace With The Sea", "Yukio Mishima", "Fiction", DateTime.Now.AddDays(-12), new DateTime(1963, 1, 1), false, false, null, 2, 0)
             };
         }
 
@@ -154,6 +161,17 @@ namespace LibrarySystem
             dgvFavourites.DataSource = favouritedBooks;
         }
 
+        private void PopulateRentedBooks()
+        {
+            rentedBooks.Clear();
+            foreach (var book in books)
+            {
+                if (book.IsCheckedOut)
+                {
+                    rentedBooks.Add(book);
+                }
+            }
+        }
 
         private void DgvBookView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -335,12 +353,27 @@ namespace LibrarySystem
         {
             AddBook addBookForm = new AddBook(this);
             addBookForm.Show();
-            
+
         }
 
         public int GetNextId()
         {
             return books.Count > 0 ? books.Max(b => b.Id) + 1 : 1;
+
+        }
+
+
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ExportToFile(books);
+        }
+
+        private void btnYourBooks_Click(object sender, EventArgs e)
+        {
+            PopulateRentedBooks();
+            YourBooks yourBooksForm = new YourBooks(books);
+            yourBooksForm.Show();
         }
     }
 }
